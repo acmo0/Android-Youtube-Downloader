@@ -117,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
+
                 if (!editTextLink.getText().toString().equals("")) {
                     radioLayout.setAlpha(1);
 
@@ -146,30 +147,20 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
+            public void onTextChanged(CharSequence charSequence, int i0, int i1, int i2) {
                 String path = editTextDirectory.getText().toString();
                 System.out.println("PATH :"+path);
                 File[] directories;
-                if(path.endsWith("/")){
-                    directories = new File(path).listFiles(File::isDirectory);
-                }else{
-                    path = path.substring(0,path.lastIndexOf("/")+1);
-                    if(path.equals("")){
-                        path = "/";
-                    }
-                    System.out.println("PATH 2 : "+path);
-                    directories = new File(path).listFiles(File::isDirectory);
+                path = path.substring(0,path.lastIndexOf("/")+1);
+                if(path.equals("")){
+                    path = "/";
                 }
-                for(int i = 0; i<directories.length; i++){
-                    System.out.println("AVAILABLE_DIRECTORIES : "+directories[i].toString());
+                System.out.println("PATH 2 : "+path);
+                directories = new File(path).listFiles(File::isDirectory);
+                if(directories == null){
+                    directories = new File[1];
+                    directories[0] = new File("/sdcard/Download");
                 }
-
                 List<String> writableDirectories = new ArrayList<String>();
                 for(int i = 0; i<directories.length; i++){
                     if(directories[i].canWrite() || directories[i] == new File("/sdcard/") || directories[i] == new File("/storage/")){
@@ -186,7 +177,10 @@ public class MainActivity extends AppCompatActivity {
                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.select_dialog_item, writableDirectoriesAvailable);
                 editTextDirectory.setThreshold(0);
                 editTextDirectory.setAdapter(arrayAdapter);
-                editTextDirectory.
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
 
             }
         });
@@ -238,6 +232,9 @@ public class MainActivity extends AppCompatActivity {
                         .observe( me, new Observer<WorkInfo>() {
                             @Override
                             public void onChanged(@Nullable WorkInfo workInfo) {
+                                if(workInfo.getState().equals(WorkInfo.State.ENQUEUED)){
+                                    textViewWait.setText("Please wait, preparing downloading...");
+                                }
                                 if(workInfo.getState().equals(WorkInfo.State.RUNNING)){
                                     textViewWait.setText("Please wait, downloading...");
                                 }
@@ -261,38 +258,5 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
-    }
-    public static String getExternalSdCardPath() {
-        String path = null;
-
-        File sdCardFile = null;
-        List<String> sdCardPossiblePath = Arrays.asList("external_sd", "ext_sd", "external", "extSdCard");
-
-        for (String sdPath : sdCardPossiblePath) {
-            File file = new File("/mnt/", sdPath);
-
-            if (file.isDirectory() && file.canWrite()) {
-                path = file.getAbsolutePath();
-
-                String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date());
-                File testWritable = new File(path, "test_" + timeStamp);
-
-                if (testWritable.mkdirs()) {
-                    testWritable.delete();
-                }
-                else {
-                    path = null;
-                }
-            }
-        }
-
-        if (path != null) {
-            sdCardFile = new File(path);
-        }
-        else {
-            sdCardFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
-        }
-
-        return sdCardFile.getAbsolutePath();
     }
 }
