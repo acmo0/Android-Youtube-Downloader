@@ -1,0 +1,9 @@
+*.iml
+*.iws
+local.properties
+.idea
+.DS_Store
+build
+captures
+.externalNativeBuild
+.gitignore
