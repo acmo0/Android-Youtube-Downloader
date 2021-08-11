@@ -16,6 +16,7 @@
         android:name="com.chaquo.python.android.PyApplication"
         android:theme="@style/Theme.YoutubeDownloader">
         <activity
+            android:windowSoftInputMode="adjustPan"
             android:name="com.acmo0.youtubedownloader.MainActivity"
             android:exported="true">
             <intent-filter>
