@@ -7,7 +7,12 @@ import static com.acmo0.youtubedownloader.DownloaderWorker.VIDEO_URL;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.work.Data;
@@ -17,12 +22,15 @@ import androidx.work.WorkManager;
 
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
@@ -37,16 +45,18 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.widget.Toolbar;
 
 import com.chaquo.python.Python;
 import com.chaquo.python.android.AndroidPlatform;
+import com.google.android.material.navigation.NavigationView;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 @RequiresApi(api = Build.VERSION_CODES.R)
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     public static Button buttonDownload;
     EditText editTextLink;
     AutoCompleteTextView editTextDirectory;
@@ -59,15 +69,22 @@ public class MainActivity extends AppCompatActivity {
     public static TextView textViewWait;
     Button infoButton;
     Button infoButton2;
-    Button returnButton;
+    ImageButton returnButton;
     ImageButton mainInfoButton;
     String[] availableDirectories = {"/sdcard/Download/"};
+    DrawerLayout drawerLayout;
+    NavigationView navigationView;
+    Toolbar toolBar;
     Handler handler = new Handler();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        this.configureToolBar();
+        this.configureDrawerLayout();
+        this.configureNavigationView();
+        Drawable navigationIcon = DrawableCompat.wrap(this.toolBar.getNavigationIcon());
+        navigationIcon.setTint(ContextCompat.getColor(this, R.color.white));
         Bundle extras = getIntent().getExtras();
         String sharedUrl = "";
         if(extras!=null) {
@@ -82,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("STORAGE :" + sddir);
         LifecycleOwner me = this;
         buttonDownload = findViewById(R.id.buttonDownload);
-        mainInfoButton = findViewById(R.id.returnButton);
         infoButton = findViewById(R.id.infoButton);
         infoButton2 = findViewById(R.id.infoButton2);
         editTextLink = findViewById(R.id.editTextLink);
@@ -111,14 +127,6 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item, availableDirectories);
         editTextDirectory.setThreshold(0);
         editTextDirectory.setAdapter(arrayAdapter);
-
-        mainInfoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setContentView(R.layout.info_layout);
-                returnButton = (Button) findViewById(R.id.returnButton);
-            }
-        });
 
         infoButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -288,6 +296,51 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
+    }
+    @Override
+    public void onBackPressed(){
+        if(this.drawerLayout.isDrawerOpen(GravityCompat.START)){
+            this.drawerLayout.closeDrawer(GravityCompat.START);
+        }else{
+            super.onBackPressed();
+        }
+    }
+    private void configureToolBar(){
+        this.toolBar = (Toolbar) findViewById(R.id.myToolBar);
+
+        setSupportActionBar(toolBar);
+    }
+    private void configureDrawerLayout() {
+        this.drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolBar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+    }
+
+    private  void configureNavigationView(){
+        this.navigationView = (NavigationView) findViewById(R.id.main_layout_nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+    }
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item){
+        int id = item.getItemId();
+        switch (id){
+            case R.id.activity_main_drawer_download:
+                break;
+            case R.id.about_item:
+                Intent infoActivityIntent = new Intent(getApplicationContext(), InfoActivity.class);
+                startActivity(infoActivityIntent);
+                break;
+            case R.id.github_item:
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/acmo0/Android-Youtube-Downloader"));
+                startActivity(browserIntent);
+                break;
+            default:
+                break;
+        }
+        this.drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
     }
     private void displayPopupWindow(View anchorView, String text, String tip) {
         PopupWindow popup = new PopupWindow(MainActivity.this);

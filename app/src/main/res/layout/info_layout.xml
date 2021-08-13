@@ -1,55 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.drawerlayout.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_info_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/myToolBar"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/purple_700"
-        android:elevation="4dp"
-        app:contentInsetStart="0dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-
-        <TextView
-            style="@style/Widget.MaterialComponents.Snackbar.TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_gravity="center"
-            android:alpha="1"
-            android:text="Video downloader"
-            android:textColor="@color/white"
-            android:textSize="24sp"
-            tools:layout_editor_absoluteX="160dp" />
-
-        <ImageButton
-            android:id="@+id/returnButton"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="end"
-            android:backgroundTint="#00FFFFFF"
-            app:srcCompat="?attr/homeAsUpIndicator"
-            tools:layout_editor_absoluteX="304dp" />
-
-    </androidx.appcompat.widget.Toolbar>
-
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/myToolBar"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@color/purple_500"
+            android:elevation="4dp"
+            app:contentInsetStart="0dp"
+            app:theme="@style/ToolBarStyle" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize">
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/infoTV"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginVertical="40dp"
             android:layout_marginTop="40dp"
             android:gravity="center_horizontal|top"
-            android:text="This application is based on " />
+            android:text="@string/info" />
     </RelativeLayout>
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/main_layout_nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/menu_layout"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.drawerlayout.widget.DrawerLayout>
