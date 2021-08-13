@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -9,12 +7,47 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <ScrollView
-        style="@android:style/Widget.Holo.Light.ScrollView"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/myToolBar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:fillViewport="false">
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/purple_700"
+        android:elevation="4dp"
+        app:contentInsetStart="0dp">
+
+
+        <TextView
+            style="@style/Widget.MaterialComponents.Snackbar.TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_gravity="center"
+            android:alpha="1"
+            android:text="Video downloader"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            tools:layout_editor_absoluteX="160dp" />
+
+            <ImageButton
+                android:id="@+id/returnButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:backgroundTint="#00FFFFFF"
+                app:srcCompat="@android:drawable/ic_menu_info_details" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+
+
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        style="@android:style/Widget.Holo.Light.ScrollView"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="false"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -29,40 +62,89 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="60dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
                 <EditText
+
                     android:id="@+id/editTextLink"
-                    android:layout_width="300dp"
-                    android:layout_height="match_parent"
+                    android:layout_width="260dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_marginHorizontal="10dp"
                     android:layout_marginVertical="10dp"
-                    android:ems="10"
                     android:hint="youtube video / playlist link"
-                    android:inputType="textPersonName"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    android:inputType="textPersonName" />
+
+                <Button
+                    android:id="@+id/infoButton"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="false"
+                    android:autoSizeMaxTextSize="14sp"
+                    android:background="@drawable/ic_button_background"
+                    android:foregroundGravity="center"
+                    android:gravity="center"
+                    android:text="?"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="12sp" />
 
             </LinearLayout>
 
-            <AutoCompleteTextView
-                android:id="@+id/editTextDirectory"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:hint="Enter a directory"
-                android:text="/sdcard/Download/" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <AutoCompleteTextView
+                    android:id="@+id/editTextDirectory"
+                    android:layout_width="260dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginVertical="10dp"
+                    android:hint="Enter a directory"
+                    android:inputType="textUri"
+                    android:text="/sdcard/Download/" />
+
+                <Button
+                    android:id="@+id/infoButton2"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="false"
+                    android:autoSizeMaxTextSize="14sp"
+                    android:background="@drawable/ic_button_background"
+                    android:foregroundGravity="center"
+                    android:gravity="center"
+                    android:text="?"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="12sp" />
+            </LinearLayout>
 
             <RadioGroup
                 android:id="@+id/radioLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="10dp"
                 android:alpha="0.2"
+                android:background="@drawable/ic_radio_background"
                 android:gravity="center"
                 android:visibility="visible">
 
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|top"
+                    android:layout_marginBottom="15dp"
+                    android:text="Quality" />
 
                 <RadioButton
                     android:id="@+id/radioButton720"
@@ -70,6 +152,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
+                    android:layout_marginHorizontal="50dp"
                     android:clickable="false"
                     android:text="720p max" />
 
@@ -123,12 +206,15 @@
                 android:id="@+id/buttonDownload"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/rounded_button"
                 android:clickable="false"
                 android:gravity="center"
                 android:text="Download"
+                android:textColor="@color/white"
                 android:visibility="visible"
                 app:layout_constraintStart_toEndOf="@+id/textViewWait"
                 app:layout_constraintTop_toTopOf="parent" />
+
         </LinearLayout>
 
     </ScrollView>
