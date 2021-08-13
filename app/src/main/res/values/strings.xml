@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Youtube Downloader</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="info">This software is based on <a href="http://ytdl-org.github.io/youtube-dl/">youtube-dl</a> to download videos/playlists from youtube and other websites like Facebook, Twitter, TikTok, Twitch,...\n\nHere is the full <a href="http://ytdl-org.github.io/youtube-dl/supportedsites.html">list of supported websites</a>.\n\nThis software is also based on <a href="https://chaquo.com/chaquopy/">Chaquopy</a>.\n\nThis software is fully open source and released on <a href="https://github.com/acmo0/Android-Youtube-Downloader">our Github repository</a>.\n\n\nThis software is released under the <a href="https://github.com/acmo0/Android-Youtube-Downloader/blob/master/LICENSE">GNU General Public License v3.0</a></string>
 </resources>

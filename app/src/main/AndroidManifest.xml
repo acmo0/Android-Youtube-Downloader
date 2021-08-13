@@ -15,6 +15,7 @@
         android:supportsRtl="true"
         android:name="com.chaquo.python.android.PyApplication"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity android:name=".InfoActivity"></activity>
         <activity
             android:windowSoftInputMode="adjustPan"
             android:configChanges="orientation"
