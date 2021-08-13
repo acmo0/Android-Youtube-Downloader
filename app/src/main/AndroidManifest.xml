@@ -14,19 +14,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:name="com.chaquo.python.android.PyApplication"
-        android:theme="@style/Theme.YoutubeDownloader">
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
             android:windowSoftInputMode="adjustPan"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
             android:name="com.acmo0.youtubedownloader.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:host="www.youtube.com" android:mimeType="text/*" />
             </intent-filter>
         </activity>
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

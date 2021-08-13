@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/myToolBar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/purple_700"
+        android:elevation="4dp"
+        app:contentInsetStart="0dp">
+
+
+        <TextView
+            style="@style/Widget.MaterialComponents.Snackbar.TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_gravity="center"
+            android:alpha="1"
+            android:text="Video downloader"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            tools:layout_editor_absoluteX="160dp" />
+
+        <ImageButton
+            android:id="@+id/returnButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:backgroundTint="#00FFFFFF"
+            app:srcCompat="?attr/homeAsUpIndicator"
+            tools:layout_editor_absoluteX="304dp" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="40dp"
+            android:gravity="center_horizontal|top"
+            android:text="This application is based on " />
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

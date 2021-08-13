@@ -16,6 +16,7 @@ import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -23,10 +24,14 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -37,10 +42,7 @@ import com.chaquo.python.Python;
 import com.chaquo.python.android.AndroidPlatform;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 @RequiresApi(api = Build.VERSION_CODES.R)
@@ -55,6 +57,10 @@ public class MainActivity extends AppCompatActivity {
     RadioButton radioButtonAudio;
     public static ProgressBar progressBar;
     public static TextView textViewWait;
+    Button infoButton;
+    Button infoButton2;
+    Button returnButton;
+    ImageButton mainInfoButton;
     String[] availableDirectories = {"/sdcard/Download/"};
     Handler handler = new Handler();
     @Override
@@ -76,6 +82,9 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("STORAGE :" + sddir);
         LifecycleOwner me = this;
         buttonDownload = findViewById(R.id.buttonDownload);
+        mainInfoButton = findViewById(R.id.returnButton);
+        infoButton = findViewById(R.id.infoButton);
+        infoButton2 = findViewById(R.id.infoButton2);
         editTextLink = findViewById(R.id.editTextLink);
         editTextDirectory = (AutoCompleteTextView) findViewById(R.id.editTextDirectory);
         radioButton720p = findViewById(R.id.radioButton720);
@@ -86,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
         textViewWait = findViewById(R.id.textViewWait);
 
         editTextLink.setText(sharedUrl);
+
         if (!editTextLink.getText().toString().equals("")) {
             radioLayout.setAlpha(1);
 
@@ -102,6 +112,26 @@ public class MainActivity extends AppCompatActivity {
         editTextDirectory.setThreshold(0);
         editTextDirectory.setAdapter(arrayAdapter);
 
+        mainInfoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setContentView(R.layout.info_layout);
+                returnButton = (Button) findViewById(R.id.returnButton);
+            }
+        });
+
+        infoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                displayPopupWindow(editTextLink, "Most important supported websites :\nYoutube, Twitch, Twitter, Facebook, TikTok, Vimeo, TF1...","Tip : you can share a video directly from youtube to our application !");
+            }
+        });
+        infoButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                displayPopupWindow(editTextDirectory, "Enter the location where your file(s) will be saved.\n Your internal storage is in /sdcard/\nIf you have an inserted sdcard it will be\nin /storage/<insert your sdcard name>/","Tip : if your folder doesn't exist, it will be created !");
+            }
+        });
 
         this.progressBar = (ProgressBar) findViewById(R.id.progressBar2);
         editTextLink.addTextChangedListener(new TextWatcher() {
@@ -258,5 +288,28 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
+    }
+    private void displayPopupWindow(View anchorView, String text, String tip) {
+        PopupWindow popup = new PopupWindow(MainActivity.this);
+        View layout = getLayoutInflater().inflate(R.layout.popup_layout, null);
+        popup.setContentView(layout);
+        // Set content width and height
+        popup.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+        popup.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+        TextView messageTextView = layout.findViewById(R.id.tvCaption);
+        TextView tipTextView = layout.findViewById(R.id.tip);
+        ImageView tipIcon = layout.findViewById(R.id.imageView2);
+        messageTextView.setText(text);
+        tipTextView.setText(tip);
+        if(tip.equals("")){
+            tipTextView.setVisibility(View.INVISIBLE);
+            tipIcon.setVisibility(View.INVISIBLE);
+        }
+        // Closes the popup window when touch outside of it - when looses focus
+        popup.setOutsideTouchable(true);
+        popup.setFocusable(true);
+        // Show anchored to button
+        popup.setBackgroundDrawable(new BitmapDrawable());
+        popup.showAsDropDown(anchorView);
     }
 }
