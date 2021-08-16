@@ -27,7 +27,6 @@ android {
             buildPython "python3.9"
             pip{
                 install "youtube-dl"
-                install "ffmpeg"
             }
         }
         ndk {
