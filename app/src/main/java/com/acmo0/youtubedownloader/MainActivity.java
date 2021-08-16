@@ -5,12 +5,14 @@ import static com.acmo0.youtubedownloader.DownloaderWorker.FORMAT;
 import static com.acmo0.youtubedownloader.DownloaderWorker.MAX_QUALITY;
 import static com.acmo0.youtubedownloader.DownloaderWorker.VIDEO_URL;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.LifecycleOwner;
@@ -20,14 +22,14 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
@@ -37,7 +39,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
@@ -57,7 +58,7 @@ import java.util.List;
 
 @RequiresApi(api = Build.VERSION_CODES.R)
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
-    public static Button buttonDownload;
+    Button buttonDownload;
     EditText editTextLink;
     AutoCompleteTextView editTextDirectory;
     RadioGroup radioLayout;
@@ -65,17 +66,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     RadioButton radioButton480p;
     RadioButton radioButton360p;
     RadioButton radioButtonAudio;
-    public static ProgressBar progressBar;
-    public static TextView textViewWait;
+    ProgressBar progressBar;
+    TextView textViewWait;
     Button infoButton;
     Button infoButton2;
-    ImageButton returnButton;
-    ImageButton mainInfoButton;
-    String[] availableDirectories = {"/sdcard/Download/"};
+    String[] availableDirectories = {Environment.getExternalStorageDirectory().getPath()+"/Download/"};
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     Toolbar toolBar;
-    Handler handler = new Handler();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,8 +81,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.configureToolBar();
         this.configureDrawerLayout();
         this.configureNavigationView();
-        Drawable navigationIcon = DrawableCompat.wrap(this.toolBar.getNavigationIcon());
-        navigationIcon.setTint(ContextCompat.getColor(this, R.color.white));
+
         Bundle extras = getIntent().getExtras();
         String sharedUrl = "";
         if(extras!=null) {
@@ -94,9 +91,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (!Python.isStarted()) {
             Python.start(new AndroidPlatform(this));
         }
-        String sdf = new String(Environment.getExternalStorageDirectory().getName());
-        String sddir = new String(Environment.getExternalStorageDirectory().getPath().replace(sdf,""));
-        System.out.println("STORAGE :" + sddir);
         LifecycleOwner me = this;
         buttonDownload = findViewById(R.id.buttonDownload);
         infoButton = findViewById(R.id.infoButton);
@@ -124,20 +118,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         }
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item, availableDirectories);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_item, availableDirectories);
         editTextDirectory.setThreshold(0);
         editTextDirectory.setAdapter(arrayAdapter);
 
         infoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                displayPopupWindow(editTextLink, "Most important supported websites :\nYoutube, Twitch, Twitter, Facebook, TikTok, Vimeo, TF1...","Tip : you can share a video directly from youtube to our application !");
+                displayPopupWindow(editTextLink, getString(R.string.text_supported_websites),getString(R.string.text_tip_link));
             }
         });
         infoButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                displayPopupWindow(editTextDirectory, "Enter the location where your file(s) will be saved.\n Your internal storage is in /sdcard/\nIf you have an inserted sdcard it will be\nin /storage/<insert your sdcard name>/","Tip : if your folder doesn't exist, it will be created !");
+                displayPopupWindow(editTextDirectory, getString(R.string.text_directory_explanation),getString(R.string.text_tip_directory_explanation));
             }
         });
 
@@ -197,22 +191,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 directories = new File(path).listFiles(File::isDirectory);
                 if(directories == null){
                     directories = new File[1];
-                    directories[0] = new File("/sdcard/Download");
+                    directories[0] = new File(Environment.getExternalStorageDirectory().getPath()+"/Download");
                 }
-                List<String> writableDirectories = new ArrayList<String>();
+                List<String> writableDirectories = new ArrayList<>();
                 for(int i = 0; i<directories.length; i++){
-                    if(directories[i].canWrite() || directories[i] == new File("/sdcard/") || directories[i] == new File("/storage/")){
+                    if(directories[i].canWrite() || directories[i] == new File(Environment.getExternalStorageDirectory().getPath()) || directories[i] == new File("/storage/")){
                         writableDirectories.add(directories[i].toString());
                     }
                 }
                 String[] writableDirectoriesAvailable;
-                if(writableDirectories!= null) {
-                    writableDirectoriesAvailable = new String[writableDirectories.size()];
-                    writableDirectoriesAvailable = writableDirectories.toArray(writableDirectoriesAvailable);
-                }else{
-                    writableDirectoriesAvailable = new String[0];
-                }
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.select_dialog_item, writableDirectoriesAvailable);
+                writableDirectoriesAvailable = new String[writableDirectories.size()];
+                writableDirectoriesAvailable = writableDirectories.toArray(writableDirectoriesAvailable);
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.select_dialog_item, writableDirectoriesAvailable);
                 editTextDirectory.setThreshold(0);
                 editTextDirectory.setAdapter(arrayAdapter);
             }
@@ -223,80 +213,106 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-        WorkManager downloaderWorkManager = WorkManager.getInstance();
-        OneTimeWorkRequest downloaderWorkRequest = new OneTimeWorkRequest.Builder(DownloaderWorker.class).build();
-        System.out.println(this);
+        WorkManager downloaderWorkManager = WorkManager.getInstance(getApplicationContext());
         buttonDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                progressBar.setVisibility(View.VISIBLE);
-                textViewWait.setVisibility(View.VISIBLE);
-                textViewWait.setText("Please wait, downloading...");
-                buttonDownload.setVisibility(View.INVISIBLE);
+                if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    progressBar.setVisibility(View.VISIBLE);
+                    textViewWait.setVisibility(View.VISIBLE);
+                    textViewWait.setText(R.string.text_wait);
+                    buttonDownload.setVisibility(View.INVISIBLE);
 
-                String videoUrl = editTextLink.getText().toString();
-                String directory = editTextDirectory.getText().toString();
-                if (directory.equals("")){
-                    directory = "/sdcard/Download/";
+                    String videoUrl = editTextLink.getText().toString();
+                    String directory = editTextDirectory.getText().toString();
+                    if (directory.equals("")) {
+                        directory = Environment.getExternalStorageDirectory().getPath()+"/Download/";
+                        System.out.println("Null directory, selected :" + directory);
+                    }
+                    int optionId = radioLayout.getCheckedRadioButtonId();
+                    String format = "unknow";
+                    String maxQuality = "";
+                    switch (optionId) {
+
+                        case R.id.radioButton360:
+                            maxQuality = "360";
+                            format = "mp4";
+                            break;
+
+                        case R.id.radioButton480:
+                            maxQuality = "480";
+                            format = "mp4";
+                            break;
+
+                        case R.id.radioButton720:
+                            maxQuality = "720";
+                            format = "mp4";
+                            break;
+
+                        case R.id.radioButtonAudio:
+                            maxQuality = "";
+                            format = "m4a";
+                            break;
+                    }
+                    Data arguments = new Data.Builder()
+                            .putString(FORMAT, format)
+                            .putString(DIRECTORY, directory)
+                            .putString(MAX_QUALITY, maxQuality)
+                            .putString(VIDEO_URL, videoUrl).build();
+                    OneTimeWorkRequest downloaderWorkRequest = new OneTimeWorkRequest.Builder(DownloaderWorker.class).setInputData(arguments).build();
+                    WorkManager.getInstance(getApplicationContext()).getWorkInfoByIdLiveData(downloaderWorkRequest.getId())
+                            .observe(me, new Observer<WorkInfo>() {
+                                @Override
+                                public void onChanged(@Nullable WorkInfo workInfo) {
+                                    if (workInfo.getState().equals(WorkInfo.State.ENQUEUED)) {
+                                        textViewWait.setText(R.string.text_prepare_download);
+                                    }
+                                    if (workInfo.getState().equals(WorkInfo.State.RUNNING)) {
+                                        textViewWait.setText(R.string.text_downloading);
+                                    }
+                                    if (workInfo.getState().equals(WorkInfo.State.SUCCEEDED)) {
+                                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.text_download_suceedeed), Toast.LENGTH_SHORT).show();
+                                        textViewWait.setVisibility(View.INVISIBLE);
+                                        progressBar.setVisibility(View.INVISIBLE);
+                                        buttonDownload.setVisibility(View.VISIBLE);
+                                    }
+                                    if (workInfo.getState().equals(WorkInfo.State.FAILED)) {
+                                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.text_download_fail), Toast.LENGTH_SHORT).show();
+                                        textViewWait.setVisibility(View.INVISIBLE);
+                                        progressBar.setVisibility(View.INVISIBLE);
+                                        buttonDownload.setVisibility(View.VISIBLE);
+                                    }
+                                }
+                            });
+                    downloaderWorkManager.enqueue(downloaderWorkRequest);
                 }
-                int optionId = radioLayout.getCheckedRadioButtonId();
-                String format = "unknow";
-                String maxQuality = "";
-                switch (optionId){
-
-                    case R.id.radioButton360:
-                        maxQuality = "360";
-                        format = "mp4";
-                        break;
-
-                    case R.id.radioButton480:
-                        maxQuality = "480";
-                        format = "mp4";
-                        break;
-
-                    case R.id.radioButton720:
-                        maxQuality = "720";
-                        format = "mp4";
-                        break;
-
-                    case R.id.radioButtonAudio:
-                        maxQuality = "";
-                        format = "m4a";
-                        break;
+                else if(ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+                    new AlertDialog.Builder(MainActivity.this)
+                            .setTitle(R.string.title_permission_needed)
+                            .setMessage(R.string.text_why_permission)
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    requestStoragePermission();
+                                }
+                            })
+                            .setNegativeButton(R.string.text_cancel, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            })
+                            .create().show();
                 }
-                Data arguments = new Data.Builder().putString(FORMAT, format).putString(DIRECTORY, directory).putString(MAX_QUALITY, maxQuality).putString(VIDEO_URL, videoUrl).build();
-                OneTimeWorkRequest downloaderWorkRequest = new OneTimeWorkRequest.Builder(DownloaderWorker.class).setInputData(arguments).build();
-                WorkManager.getInstance().getWorkInfoByIdLiveData(downloaderWorkRequest.getId())
-                        .observe( me, new Observer<WorkInfo>() {
-                            @Override
-                            public void onChanged(@Nullable WorkInfo workInfo) {
-                                if(workInfo.getState().equals(WorkInfo.State.ENQUEUED)){
-                                    textViewWait.setText("Please wait, preparing downloading...");
-                                }
-                                if(workInfo.getState().equals(WorkInfo.State.RUNNING)){
-                                    textViewWait.setText("Please wait, downloading...");
-                                }
-                                if(workInfo.getState().equals(WorkInfo.State.SUCCEEDED)){
-                                    Toast.makeText(getApplicationContext(), "Download succeeded", Toast.LENGTH_SHORT).show();
-                                    textViewWait.setVisibility(View.INVISIBLE);
-                                    progressBar.setVisibility(View.INVISIBLE);
-                                    buttonDownload.setVisibility(View.VISIBLE);
-                                }
-                                if(workInfo.getState().equals(WorkInfo.State.FAILED)){
-                                    Toast.makeText(getApplicationContext(), "Download failed", Toast.LENGTH_SHORT).show();
-                                    textViewWait.setVisibility(View.INVISIBLE);
-                                    progressBar.setVisibility(View.INVISIBLE);
-                                    buttonDownload.setVisibility(View.VISIBLE);
-                                }
-                            }
-                        });
-                downloaderWorkManager.enqueue(downloaderWorkRequest);
-
+                else{
+                    requestStoragePermission();
+                }
             }
 
         });
 
     }
+
     @Override
     public void onBackPressed(){
         if(this.drawerLayout.isDrawerOpen(GravityCompat.START)){
@@ -322,12 +338,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
+        if(requestCode == 1){
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                buttonDownload.performClick();
+            }else{
+                Toast.makeText(this, "Storage permission is required.\nSee app parameters to enable Storage permission.", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
     @Override
     public boolean onNavigationItemSelected(MenuItem item){
         int id = item.getItemId();
         switch (id){
-            case R.id.activity_main_drawer_download:
-                break;
             case R.id.about_item:
                 Intent infoActivityIntent = new Intent(getApplicationContext(), InfoActivity.class);
                 startActivity(infoActivityIntent);
@@ -362,7 +388,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         popup.setOutsideTouchable(true);
         popup.setFocusable(true);
         // Show anchored to button
-        popup.setBackgroundDrawable(new BitmapDrawable());
+        popup.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_background));
         popup.showAsDropDown(anchorView);
     }
+    private void requestStoragePermission() {
+        ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+    }
+
 }

@@ -1,6 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <resources>
     <string name="app_name">Youtube Downloader</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="info">This software is based on <a href="http://ytdl-org.github.io/youtube-dl/">youtube-dl</a> to download videos/playlists from youtube and other websites like Facebook, Twitter, TikTok, Twitch,...\n\nHere is the full <a href="http://ytdl-org.github.io/youtube-dl/supportedsites.html">list of supported websites</a>.\n\nThis software is also based on <a href="https://chaquo.com/chaquopy/">Chaquopy</a>.\n\nThis software is fully open source and released on <a href="https://github.com/acmo0/Android-Youtube-Downloader">our Github repository</a>.\n\n\nThis software is released under the <a href="https://github.com/acmo0/Android-Youtube-Downloader/blob/master/LICENSE">GNU General Public License v3.0</a></string>
+    <string name="text_wait">Please wait, downloading...</string>
+    <string name="text_prepare_download">Please wait, preparing downloading...</string>
+    <string name="text_downloading">Please wait, downloading...</string>
+    <string name="text_download_suceedeed">Download succeeded</string>
+    <string name="text_download_fail">Download failed</string>
+    <string name="title_permission_needed">Permission needed</string>
+    <string name="text_why_permission">This permission is needed to save your videos and musics on your smartphone</string>
+    <string name="text_cancel">Cancel</string>
+    <string name="text_supported_websites">Most important supported websites :\nYoutube, Twitch, Twitter, Facebook, TikTok, Vimeo, TF1...\n<a href="http://ytdl-org.github.io/youtube-dl/supportedsites.html">Entire list of supported websites</a></string>
+    <string name="text_tip_link">Tip : you can share a video directly from youtube to our application !</string>
+    <string name="text_directory_explanation"><![CDATA[Enter the location where your file(s) will be saved.\n Your internal storage is in /sdcard/\nIf you have an inserted sdcard it will be\nin /storage/<insert your sdcard name>/]]></string>
+    <string name="text_tip_directory_explanation">Tip : if your folder doesn\'t exist, it will be created !</string>
+    <string name="text_notif_downloading">Downloading</string>
+    <string name="text_notif_download_error">Sorry, error while downloading...</string>
+    <string name="text_notif_download_finished">Download finished !</string>
+    <string name="text_hint_link">youtube video / playlist link</string>
+    <string name="text_hint_directory">Enter a directory</string>
+    <string name="text_group_quality">Quality</string>
+    <string name="text_audio_button">audio only</string>
+    <string name="text_wait_tv">Please wait...</string>
+    <string name="text_download_button">Download</string>
+    <string name="text_nav_download">Download a video</string>
+    <string name="text_nav_about">About</string>
+    <string name="text_nav_github">Github project</string>
 </resources>

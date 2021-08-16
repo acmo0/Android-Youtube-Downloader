@@ -15,8 +15,11 @@
         android:supportsRtl="true"
         android:name="com.chaquo.python.android.PyApplication"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".InfoActivity"></activity>
+        <activity android:name=".InfoActivity">
+
+        </activity>
         <activity
+            android:launchMode="singleTop"
             android:windowSoftInputMode="adjustPan"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
@@ -32,9 +35,6 @@
                 <data android:host="www.youtube.com" android:mimeType="text/*" />
             </intent-filter>
         </activity>
-        <meta-data
-            android:name="preloaded_fonts"
-            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

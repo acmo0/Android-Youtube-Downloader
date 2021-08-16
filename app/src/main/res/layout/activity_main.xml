@@ -65,7 +65,7 @@
                     android:layout_gravity="center"
                     android:layout_marginHorizontal="10dp"
                     android:layout_marginVertical="10dp"
-                    android:hint="youtube video / playlist link"
+                    android:hint="@string/text_hint_link"
                     android:inputType="textPersonName" />
 
                 <Button
@@ -97,7 +97,7 @@
                     android:layout_gravity="center"
                     android:layout_marginHorizontal="10dp"
                     android:layout_marginVertical="10dp"
-                    android:hint="Enter a directory"
+                    android:hint="@string/text_hint_directory"
                     android:inputType="textUri"
                     android:text="/sdcard/Download/" />
 
@@ -134,7 +134,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal|top"
                     android:layout_marginBottom="15dp"
-                    android:text="Quality" />
+                    android:text="@string/text_group_quality" />
 
                 <RadioButton
                     android:id="@+id/radioButton720"
@@ -169,7 +169,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="false"
-                    android:text="audio only" />
+                    android:text="@string/text_audio_button" />
 
             </RadioGroup>
 
@@ -189,7 +189,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Please wait..."
+                android:text="@string/text_wait_tv"
                 android:visibility="invisible" />
 
             <Button
@@ -199,7 +199,7 @@
                 android:background="@drawable/rounded_button"
                 android:clickable="false"
                 android:gravity="center"
-                android:text="Download"
+                android:text="@string/text_download_button"
                 android:textColor="@color/white"
                 android:visibility="visible"
                 app:layout_constraintStart_toEndOf="@+id/textViewWait"
