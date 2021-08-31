@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Youtube Downloader</string>
+    <string name="app_name">Video Downloader</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="info">Cette application est basée sur <a href="http://ytdl-org.github.io/youtube-dl/">youtube-dl</a> pour télécherger des vidéos/playlists youtube et sur d\'autres sites comme Facebook, Twitter, TikTok, Twitch,...\n\nVoici la liste entière des <a href="http://ytdl-org.github.io/youtube-dl/supportedsites.html">sites supportés</a>.\n\nCette application utilise aussi <a href="https://chaquo.com/chaquopy/">Chaquopy</a>.\n\nCette application est entièrement open-source et le code est publié sur <a href="https://github.com/acmo0/Android-Youtube-Downloader">Github</a>.\n\n\nCette application est publiée sous une license <a href="https://github.com/acmo0/Android-Youtube-Downloader/blob/master/LICENSE">GNU General Public License v3.0</a></string>
+    <string name="info">Cette application est basée sur <a href="http://ytdl-org.github.io/youtube-dl/">youtube-dl</a> pour télécherger des vidéos/playlists youtube et sur d\'autres sites comme Facebook, Twitter, TikTok, Twitch,...\n\nVoici la liste entière des <a href="http://ytdl-org.github.io/youtube-dl/supportedsites.html">sites supportés</a>.\n\nCette application utilise aussi <a href="https://chaquo.com/chaquopy/">Chaquopy</a>.\n\nCette application est entièrement open-source et le code est publié sur <a href="https://github.com/acmo0/Android-Youtube-Downloader">Github</a>.N\'hésitez pas à reporter des bugs/suggestions sur github.\n\n\n\nCette application est publiée sous une license <a href="https://github.com/acmo0/Android-Youtube-Downloader/blob/master/LICENSE">GNU General Public License v3.0</a></string>
 
     <string name="text_wait">Veuillez patienter, téléchagement...</string>
     <string name="text_prepare_download">Veuillez patienter, préparation...</string>
@@ -13,7 +13,7 @@
     <string name="title_permission_needed">Permission</string>
     <string name="text_why_permission">Cette application a besoin d\'accéder au stockage pour enregister les vidéos/musiques</string>
     <string name="text_cancel">Annuler</string>
-    <string name="text_supported_websites">Principaux sites supportés :\nYoutube, Twitch, Twitter, Facebook, TikTok, Vimeo, TF1...\n<a href="http://ytdl-org.github.io/youtube-dl/supportedsites.html">Liste des sites supportés</a></string>
+    <string name="text_supported_websites">Principaux sites supportés :\nYoutube, Twitch, Twitter, Facebook, TikTok, Vimeo, TF1...\nVoir la section "à propos" pour la liste entière des sites supportés.</string>
     <string name="text_tip_link">Astuce : Vous pouvez partager une vidéo/playlist depuis youtube vers notre application</string>
     <string name="text_directory_explanation"><![CDATA[Entrez le chemin où vos vidéos seront enregistées.\n Le stockage interne est /sdcard/\nSi vous avez une carte SD, elle doit être localisée en /storage/<nom de votre carte SD>/]]></string>
     <string name="text_tip_directory_explanation">Astuce : si une partie de votre chemin n\'exite pas, les dossiers manquants seront automatiquement créés !

@@ -19,7 +19,7 @@
 
         </activity>
         <activity
-            android:launchMode="singleTop"
+
             android:windowSoftInputMode="adjustPan"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
