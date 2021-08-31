@@ -23,8 +23,8 @@ android {
             }
         }
         python {
-            buildPython "/usr/bin/python3.9"
-            buildPython "python3.9"
+            buildPython "/usr/bin/python3"
+            buildPython "python3"
             pip{
                 install "youtube-dl"
             }
