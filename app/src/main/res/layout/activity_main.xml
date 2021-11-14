@@ -20,9 +20,7 @@
             android:elevation="4dp"
             app:contentInsetStart="0dp"
             app:theme="@style/ToolBarStyle" />
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+
     </LinearLayout>
 
 
@@ -66,12 +64,13 @@
                     android:layout_marginHorizontal="10dp"
                     android:layout_marginVertical="10dp"
                     android:hint="@string/text_hint_link"
-                    android:inputType="textPersonName" />
+                    android:inputType="textPersonName"
+                    android:minHeight="48dp" />
 
                 <Button
                     android:id="@+id/infoButton"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_gravity="center"
                     android:adjustViewBounds="false"
                     android:autoSizeMaxTextSize="14sp"
@@ -99,12 +98,13 @@
                     android:layout_marginVertical="10dp"
                     android:hint="@string/text_hint_directory"
                     android:inputType="textUri"
+                    android:minHeight="48dp"
                     android:text="/sdcard/Download/" />
 
                 <Button
                     android:id="@+id/infoButton2"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_gravity="center"
                     android:adjustViewBounds="false"
                     android:autoSizeMaxTextSize="14sp"
@@ -173,16 +173,33 @@
 
             </RadioGroup>
 
-
-            <ProgressBar
-                android:id="@+id/progressBar2"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:indeterminate="true"
-                android:indeterminateTint="#3F51B5"
-                android:visibility="invisible" />
+                android:orientation="vertical">
+
+                <ProgressBar
+                    android:id="@+id/progressBar2"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:indeterminate="true"
+                    android:indeterminateTint="#3F51B5"
+                    android:visibility="invisible" />
+
+                <Button
+                    android:id="@+id/stopbutton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/rounded_button"
+                    android:backgroundTint="#B31EE9"
+                    android:foregroundTint="@color/white"
+                    android:text="Stop"
+                    android:textColor="@color/white"
+                    android:visibility="gone" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/textViewWait"

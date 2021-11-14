@@ -30,4 +30,5 @@
     <string name="text_nav_download">Télécharger une vidéo</string>
     <string name="text_nav_about">À propos</string>
     <string name="text_nav_github">Projet Github</string>
+    <string name="text_notif_stop">Vous avez arrêté le téléchargement</string>
 </resources>
