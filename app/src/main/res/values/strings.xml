@@ -28,4 +28,5 @@
     <string name="text_nav_download">Download a video</string>
     <string name="text_nav_about">About</string>
     <string name="text_nav_github">Github project</string>
+    <string name="text_notif_stop">You stopped the downloading</string>
 </resources>

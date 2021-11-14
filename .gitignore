@@ -7,3 +7,4 @@ build
 captures
 .externalNativeBuild
 app/src/main/python/__pycache__
+.gradle

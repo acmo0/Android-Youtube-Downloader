@@ -55,6 +55,7 @@ import com.google.android.material.navigation.NavigationView;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @RequiresApi(api = Build.VERSION_CODES.R)
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     RadioButton radioButton360p;
     RadioButton radioButtonAudio;
     ProgressBar progressBar;
+    Button StopDownloadButton;
     TextView textViewWait;
     Button infoButton;
     Button infoButton2;
@@ -103,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         radioButtonAudio = findViewById(R.id.radioButtonAudio);
         radioLayout = findViewById(R.id.radioLayout);
         textViewWait = findViewById(R.id.textViewWait);
-
+        StopDownloadButton = findViewById(R.id.stopbutton);
         editTextLink.setText(sharedUrl);
 
         if (!editTextLink.getText().toString().equals("")) {
@@ -259,7 +261,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             .putString(DIRECTORY, directory)
                             .putString(MAX_QUALITY, maxQuality)
                             .putString(VIDEO_URL, videoUrl).build();
+                    StopDownloadButton.setVisibility(View.VISIBLE);
+
                     OneTimeWorkRequest downloaderWorkRequest = new OneTimeWorkRequest.Builder(DownloaderWorker.class).setInputData(arguments).build();
+
                     WorkManager.getInstance(getApplicationContext()).getWorkInfoByIdLiveData(downloaderWorkRequest.getId())
                             .observe(me, new Observer<WorkInfo>() {
                                 @Override
@@ -269,18 +274,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     }
                                     if (workInfo.getState().equals(WorkInfo.State.RUNNING)) {
                                         textViewWait.setText(R.string.text_downloading);
+                                        cancelButton(downloaderWorkManager, downloaderWorkRequest.getId());
                                     }
                                     if (workInfo.getState().equals(WorkInfo.State.SUCCEEDED)) {
                                         Toast.makeText(getApplicationContext(), getResources().getString(R.string.text_download_suceedeed), Toast.LENGTH_SHORT).show();
                                         textViewWait.setVisibility(View.INVISIBLE);
                                         progressBar.setVisibility(View.INVISIBLE);
                                         buttonDownload.setVisibility(View.VISIBLE);
+                                        StopDownloadButton.setVisibility(View.GONE);
                                     }
                                     if (workInfo.getState().equals(WorkInfo.State.FAILED)) {
                                         Toast.makeText(getApplicationContext(), getResources().getString(R.string.text_download_fail), Toast.LENGTH_SHORT).show();
                                         textViewWait.setVisibility(View.INVISIBLE);
                                         progressBar.setVisibility(View.INVISIBLE);
                                         buttonDownload.setVisibility(View.VISIBLE);
+                                        StopDownloadButton.setVisibility(View.GONE);
                                     }
                                 }
                             });
@@ -320,6 +328,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }else{
             super.onBackPressed();
         }
+    }
+    private void cancelButton(WorkManager worker, UUID workId){
+        this.StopDownloadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                worker.cancelWorkById(workId);
+                textViewWait.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.INVISIBLE);
+                buttonDownload.setVisibility(View.VISIBLE);
+                StopDownloadButton.setVisibility(View.INVISIBLE);
+            }
+        });
     }
     private void configureToolBar(){
         this.toolBar = (Toolbar) findViewById(R.id.myToolBar);

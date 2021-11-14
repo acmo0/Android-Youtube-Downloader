@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.1" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.acmo0.youtubedownloader">
     <uses-permission android:name="android.permission.INTERNET" />
@@ -34,7 +34,14 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:host="www.youtube.com" android:mimeType="text/*" />
             </intent-filter>
+
+
+
         </activity>
+        <receiver
+            android:name=".StopDownloadBroadcast"
+            android:enabled="true" />
+
     </application>
 
 </manifest>
