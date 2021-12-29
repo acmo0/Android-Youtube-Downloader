@@ -1,5 +1,6 @@
 # Android-Youtube-Downloader 8+
-An Android Youtube downloader based on youtube-dl, pytube and Chaquopy. You can download in mp4/m4a youtube videos/playlists. 
+An Android Youtube downloader based on youtube-dl, pytube and Chaquopy.
+You can download in mp4/m4a youtube videos/playlists. This application work for many other websites ([see youtube-dl supported website](https://ytdl-org.github.io/youtube-dl/supportedsites.html))
 ***
 ## Compatibility
 Compatible with android 8 and newer
@@ -7,7 +8,7 @@ Compatible with android 8 and newer
 [Download from our github repository.](https://github.com/acmo0/Android-Youtube-Downloader/releases/tag/v1.2)
 ## Lastest release improvememts v1.2
 
-1. Solve downloading speed issue
+1. **Solve downloading speed issue**
 2. Save lastest directory used for video/audio downloading
 3. Improve download state on the notification
 ## Privacy
