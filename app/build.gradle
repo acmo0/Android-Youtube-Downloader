@@ -28,8 +28,6 @@ android {
             pip{
                 install "youtube-dl"
                 install "pytube"
-                install "pydub"
-                install "ffmpeg-python"
             }
         }
         ndk {
