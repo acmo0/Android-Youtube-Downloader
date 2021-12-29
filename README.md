@@ -13,4 +13,8 @@ Compatible with android 8 and newer
 3. Improve download state on the notification
 ## Privacy
 This application does not collect any user information
-
+## Credits
+1. [Chaquopy](https://chaquo.com/chaquopy/) MIT License
+2. [youtube-dl](https://github.com/ytdl-org/youtube-dl) The Unlicense
+3. [pytube](https://github.com/pytube/pytube) The Unlicense
+4. [ffmpeg-android-java](https://github.com/WritingMinds/ffmpeg-android-java) GPLv3.0
