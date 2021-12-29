@@ -31,4 +31,6 @@
     <string name="text_nav_about">À propos</string>
     <string name="text_nav_github">Projet Github</string>
     <string name="text_notif_stop">Vous avez arrêté le téléchargement</string>
+    <string name="directory_key">last_directory</string>
+    <string name="directory_key_default">/sdcard/Download/</string>
 </resources>

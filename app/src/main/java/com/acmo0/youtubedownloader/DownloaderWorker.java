@@ -6,14 +6,11 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Environment;
-import android.widget.Toast;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
@@ -24,9 +21,13 @@ import androidx.work.WorkerParameters;
 
 import com.chaquo.python.PyObject;
 import com.chaquo.python.Python;
+import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler;
+import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
+import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;
+import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
+import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
 
 import java.io.File;
-import java.sql.Time;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.annotations.NonNull;
@@ -77,11 +78,17 @@ public class DownloaderWorker extends Worker {
         }
 
         Python py = Python.getInstance();
-        PyObject pyf = py.getModule("downloader");
+        PyObject pyf;
+
 
 
 
         notifyDownloading(mNotificationManager, notifBuilder, getApplicationContext().getResources().getString(R.string.text_notif_downloading), activityPendingIntent);
+        if (videoUrl.contains("youtu.be") || videoUrl.contains("youtube.com")){
+            pyf= py.getModule("ytb_downloader");
+        }else{
+            pyf = py.getModule("downloader");
+        }
         downloader = pyf.callAttr("downloader", videoUrl, format, directory, maxQuality, Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.acmo0.youtubedownloader");
         PyObject download = downloader.callAttr("download");
         System.out.println("Started downloading");
@@ -99,7 +106,13 @@ public class DownloaderWorker extends Worker {
                 e.printStackTrace();
             }
         }
+        FFmpeg ffmpeg = FFmpeg.getInstance(getApplicationContext());
+        loadFFmpeg(ffmpeg);
         if(downloader.get("fail").toBoolean() == false) {
+            if (format.equals("m4a")) {
+                System.out.println("Converting");
+                ffmpegExecute(ffmpeg,downloader.callAttr("cmd").toJava(String[].class));
+            }
             notifySuccess(mNotificationManager, notifBuilder, activityPendingIntent);
             return Result.success();
         }
@@ -157,5 +170,54 @@ public class DownloaderWorker extends Worker {
 
         assert notificationManager != null;
         notificationManager.createNotificationChannel(channel);
+    }
+    void loadFFmpeg(FFmpeg ffmpeg){
+        try{
+            ffmpeg.loadBinary(new LoadBinaryResponseHandler(){
+                @Override
+                public void onStart(){}
+                @Override
+                public void onFailure(){}
+                @Override
+                public void onSuccess() {}
+
+                @Override
+                public void onFinish() {}
+            });
+        }catch (FFmpegNotSupportedException e){
+            Log.e("ERROR",e.toString());
+        }
+    }
+    void ffmpegExecute(FFmpeg ffmpeg,String[] cmd){
+        try{
+            ffmpeg.execute(cmd, new ExecuteBinaryResponseHandler(){
+                @Override
+                public void onStart() {}
+
+                @Override
+                public void onProgress(String message) {System.out.println(message);}
+
+                @Override
+                public void onFailure(String message) {}
+
+                @Override
+                public void onSuccess(String message) {}
+
+                @Override
+                public void onFinish() {
+                    for(int i = 0;i<cmd.length;i++){
+                        if (cmd[i].equals("-i")) {
+                            String filename = cmd[i+1];
+                            System.out.println(filename);
+                            File tempfile = new File(filename);
+                            tempfile.delete();
+                        }
+                    }
+
+                }
+            });
+        }catch (FFmpegCommandAlreadyRunningException e){
+            Log.d("ERROR", e.toString());
+        }
     }
 }

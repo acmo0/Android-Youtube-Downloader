@@ -23,8 +23,10 @@ import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -107,7 +109,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         textViewWait = findViewById(R.id.textViewWait);
         StopDownloadButton = findViewById(R.id.stopbutton);
         editTextLink.setText(sharedUrl);
-
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        String defaultValue = getResources().getString(R.string.directory_key_default);
+        String last_directory = sharedPref.getString(getString(R.string.directory_key), defaultValue);
+        editTextDirectory.setText(last_directory);
         if (!editTextLink.getText().toString().equals("")) {
             radioLayout.setAlpha(1);
 
@@ -226,7 +231,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     buttonDownload.setVisibility(View.INVISIBLE);
 
                     String videoUrl = editTextLink.getText().toString();
+
                     String directory = editTextDirectory.getText().toString();
+
+                    SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString(getString(R.string.directory_key),directory);
+                    editor.apply();
                     if (directory.equals("")) {
                         directory = Environment.getExternalStorageDirectory().getPath()+"/Download/";
                         System.out.println("Null directory, selected :" + directory);
@@ -237,17 +248,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     switch (optionId) {
 
                         case R.id.radioButton360:
-                            maxQuality = "360";
+                            maxQuality = "360p";
                             format = "mp4";
                             break;
 
                         case R.id.radioButton480:
-                            maxQuality = "480";
+                            maxQuality = "480p";
                             format = "mp4";
                             break;
 
                         case R.id.radioButton720:
-                            maxQuality = "720";
+                            maxQuality = "720p";
                             format = "mp4";
                             break;
 
@@ -337,7 +348,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 textViewWait.setVisibility(View.INVISIBLE);
                 progressBar.setVisibility(View.INVISIBLE);
                 buttonDownload.setVisibility(View.VISIBLE);
-                StopDownloadButton.setVisibility(View.INVISIBLE);
+                StopDownloadButton.setVisibility(View.GONE);
             }
         });
     }
