@@ -17,7 +17,6 @@ class downloader:
         self.fail = False
         self.stop=False
         self.status = 'Stopped'
-        print("initialise")
         
     def getTime(self):
         time_stamp = time.localtime()
@@ -44,16 +43,12 @@ class downloader:
         self.status='Preparing'
         self.process = Thread(target=self.downloadAction,args=(self.directory,self.dl_format, self.max_best_quality,self.url))
         
-        print('init')
         if os.path.exists(self.log_path+"/yt.log.txt"):
             os.remove(self.log_path+"/yt.log.txt")
         try:
             self.process.start()
-            print('start')
             return True
         except Exception as e:
-            print('Erreur')
-            sys.stdout.write(str(e))
             if "not a valid URL" in str(e):
                 self.writeLog("ERROR :"+str(e), self.log_path)
                 return False
@@ -61,7 +56,7 @@ class downloader:
             self.writeLog("PY WARNING : first exception :"+str(e)+", wait 10s and retry", self.log_path)
             return False
     def downloadAction(self,directory,dl_format,max_best_quality,url):
-        sys.stdout.write("process started")
+        
         ydl_opts = {}
         if directory[-1] != "/":    
             directory+="/"
@@ -84,28 +79,22 @@ class downloader:
             pass
         except Exception as e:
             self.fail = True
-        sys.stdout.write("process endeed")
             
     def my_hook(self,d):
         if d['status'] == 'finished':
-            file_tuple = os.path.split(os.path.abspath(d['filename']))
-            print("Done downloading {}".format(file_tuple[1]))
+            file_tuple = os.path.split(os.path.abspath(d['filename']))        
             self.status='convert'
             if self.stop==True:
                 self.process.terminate()
         if d['status'] == 'downloading':
-            print(d['filename'], d['_percent_str'], d['_eta_str'])
-            self.status=d['filename'].split("/")[-1]+' : '+d['_percent_str']
-            print(self.stop)
+            self.status=d['_percent_str']
             if self.stop==True:
                 self.status='Stopped'
-                print(self.process)
                 raise ValueError('Stopping process')
             
     def state(self):
         return self.process.is_alive()
     def stop(self):
-        sys.stdout.write('Stopping')
         self.stop=True
 
 
