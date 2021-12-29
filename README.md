@@ -5,7 +5,7 @@ An Android Youtube downloader based on youtube-dl, pytube and Chaquopy. You can 
 Compatible with android 8 and newer
 ## Download
 [Download from our github repository.](https://github.com/acmo0/Android-Youtube-Downloader/releases/tag/v1.2)
-## Lastest release improvememts (v1.2)
+## Lastest release improvememts v1.2
 1.Solve downloading speed issue
 2.Save lastest directory used for video/audio downloading
 3.Improve download state on the notification
