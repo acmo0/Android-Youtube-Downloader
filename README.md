@@ -11,6 +11,10 @@ Compatible with android 8 and newer
 1. **Solve downloading speed issue**
 2. Save lastest directory used for video/audio downloading
 3. Improve download state on the notification
+
+## Screenshots
+![screenshot1](images/screen1.png)
+![screenshot2](images/screen2.png)
 ## Privacy
 This application does not collect any user information
 ## Credits
@@ -18,3 +22,4 @@ This application does not collect any user information
 2. [youtube-dl](https://github.com/ytdl-org/youtube-dl) The Unlicense
 3. [pytube](https://github.com/pytube/pytube) The Unlicense
 4. [ffmpeg-android-java](https://github.com/WritingMinds/ffmpeg-android-java) GPLv3.0
+
