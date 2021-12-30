@@ -4,8 +4,8 @@ import os.path
 import os
 import time
 from threading import *
-from multiprocessing import Process
 import sys
+import ffmpeg
 
 class downloader:
     def __init__(self,url, dl_format, directory, max_best_quality, log_path):
