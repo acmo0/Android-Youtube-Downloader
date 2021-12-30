@@ -1,11 +1,9 @@
 from __future__ import unicode_literals
 import youtube_dl
-import os.path
 import os
 import time
 from threading import *
 import sys
-import ffmpeg
 
 class downloader:
     def __init__(self,url, dl_format, directory, max_best_quality, log_path):
