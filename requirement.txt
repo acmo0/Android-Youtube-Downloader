@@ -1,6 +1,0 @@
-pytube
-youtube-dl
-os
-time
-threading
-sys
