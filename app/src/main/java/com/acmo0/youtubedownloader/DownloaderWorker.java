@@ -80,35 +80,65 @@ public class DownloaderWorker extends Worker {
         Python py = Python.getInstance();
         PyObject pyf;
 
-
-
-
         notifyDownloading(mNotificationManager, notifBuilder, getApplicationContext().getResources().getString(R.string.text_notif_downloading), activityPendingIntent);
-        if (videoUrl.contains("youtu.be") || videoUrl.contains("youtube.com")){
-            pyf= py.getModule("ytb_downloader");
-        }else{
-            pyf = py.getModule("downloader");
-        }
+        String module = "yt-dlp";
+        pyf = py.getModule("downloader");
         downloader = pyf.callAttr("downloader", videoUrl, format, directory, maxQuality, Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.acmo0.youtubedownloader");
         PyObject download = downloader.callAttr("download");
         System.out.println("Started downloading");
-        while (downloader.callAttr("state").toBoolean()!=false){
+        boolean process_fail = false;
+        while (downloader.callAttr("state").toBoolean()!=false || process_fail){
             notifBuilder.setContentText(downloader.get("status").toString());
             mNotificationManager.notify(1,notifBuilder.build());
-            if(downloader.get("fail").toBoolean() == true){
+            process_fail = downloader.callAttr("isFail").toBoolean();
+            System.out.println("State : "+Boolean.toString(process_fail));
+            if(process_fail){
+                System.out.println("ERROR");
                 mNotificationManager.cancelAll();
                 notifyFail(mNotificationManager, notifBuilder, activityPendingIntent);
                 return Result.failure();
             }
             try {
-                TimeUnit.MILLISECONDS.sleep(1000);
+                TimeUnit.MILLISECONDS.sleep(600);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
         }
-        FFmpeg ffmpeg = FFmpeg.getInstance(getApplicationContext());
-        loadFFmpeg(ffmpeg);
-        if(downloader.get("fail").toBoolean() == false) {
+        System.out.println("State : "+Boolean.toString(process_fail));
+        process_fail = downloader.callAttr("isFail").toBoolean();
+        if(process_fail == false){
+            notifySuccess(mNotificationManager, notifBuilder, activityPendingIntent);
+            return Result.success();
+        }
+        if ((videoUrl.contains("youtu.be") || videoUrl.contains("youtube.com")) && process_fail && Build.VERSION.SDK_INT < 29) {
+            pyf = py.getModule("ytb_downloader");
+            module = "pytube";
+            downloader = pyf.callAttr("downloader", videoUrl, format, directory, maxQuality, Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.acmo0.youtubedownloader");
+            download = downloader.callAttr("download");
+            System.out.println("Started downloading");
+            while (downloader.callAttr("state").toBoolean()!=false){
+                notifBuilder.setContentText(downloader.get("status").toString());
+                mNotificationManager.notify(1,notifBuilder.build());
+                process_fail = downloader.callAttr("isFail").toBoolean();
+                if(process_fail){
+                    mNotificationManager.cancelAll();
+                    notifyFail(mNotificationManager, notifBuilder, activityPendingIntent);
+                    return Result.failure();
+                }
+                try {
+                    TimeUnit.MILLISECONDS.sleep(600);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+        process_fail = downloader.callAttr("isFail").toBoolean();
+
+        if(process_fail == false && module.equals("pytube")){
+            FFmpeg ffmpeg = FFmpeg.getInstance(getApplicationContext());
+            loadFFmpeg(ffmpeg);
             if (format.equals("m4a")) {
                 System.out.println("Converting");
                 ffmpegExecute(ffmpeg,downloader.callAttr("cmd").toJava(String[].class));

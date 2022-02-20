@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-import youtube_dl
+import yt_dlp as youtube_dl
 import os
 import time
 from threading import *
@@ -49,10 +49,13 @@ class downloader:
         except Exception as e:
             if "not a valid URL" in str(e):
                 self.writeLog("ERROR :"+str(e), self.log_path)
+                self.fail = True
                 return False
             time.sleep(10)
             self.writeLog("PY WARNING : first exception :"+str(e)+", wait 10s and retry", self.log_path)
+            self.fail = True
             return False
+            
     def downloadAction(self,directory,dl_format,max_best_quality,url):
         
         ydl_opts = {}
@@ -60,13 +63,13 @@ class downloader:
             directory+="/"
         if dl_format == "mp4":
             ydl_opts = {
-                'format': 'bestvideo[height<='+max_best_quality+']+bestaudio/best[height<='+max_best_quality+']',
+                'format': 'best[height<='+max_best_quality+']',
                 'outtmpl': directory+"%(title)s.%(ext)s",
                 'progress_hooks': [self.my_hook],
             }
         elif dl_format == "m4a":
             ydl_opts = {
-                'format': 'bestaudio[ext=m4a]/best[ext=m4a]',
+                'format': 'bestaudio[ext=m4a]',
                 'outtmpl': directory+"%(title)s.%(ext)s",
                 'progress_hooks': [self.my_hook],
             }
@@ -74,22 +77,27 @@ class downloader:
             with youtube_dl.YoutubeDL(ydl_opts) as ydl:
                 ydl.download([url])
         except ValueError:
-            pass
-        except Exception as e:
             self.fail = True
+        except Exception as e:
+            print("error ",str(e))
+            time.sleep(5)
+            try:
+                with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                    ydl.download([url])
+            except Exception as e:
+                print("error ",str(e))
+                self.fail = True
+                
+                
             
     def my_hook(self,d):
-        if d['status'] == 'finished':
-            file_tuple = os.path.split(os.path.abspath(d['filename']))        
-            self.status='convert'
-            if self.stop==True:
-                self.process.terminate()
         if d['status'] == 'downloading':
             self.status=d['_percent_str']
             if self.stop==True:
                 self.status='Stopped'
                 raise ValueError('Stopping process')
-            
+    def isFail(self):
+        return self.fail  
     def state(self):
         return self.process.is_alive()
     def stop(self):
