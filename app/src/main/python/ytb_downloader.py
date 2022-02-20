@@ -2,6 +2,8 @@ import os
 import time
 from threading import *
 import sys
+import traceback
+import pytube
 from pytube import YouTube, Playlist,exceptions
 
 class downloader:
@@ -16,7 +18,6 @@ class downloader:
         self.status = 'Stopped'
         self.cmd_str = [""]
         self.res_list = ['2160p', '1440p', '1080p', '720p', '480p', '360p', '240p', '144p']
-        print("initialise")
 
     def getTime(self):
         time_stamp = time.localtime()
@@ -48,10 +49,8 @@ class downloader:
             os.remove(self.log_path+"/yt.log.txt")
         try:
             self.process.start()
-            print('start')
             return True
         except Exception as e:
-            print('Erreur')
             sys.stdout.write(str(e))
             self.fail = True
 
@@ -69,7 +68,6 @@ class downloader:
                     if len(self.mp4streams) == 0:
                         sys.stdout.write("No streams")
                         raise Exception("No streams")
-                sys.stdout.write(str(len(self.mp4streams)))
                 self.download_stream = self.mp4streams.order_by('fps')[-1]
                 self.downloadfilename = directory+self.download_stream.default_filename
                 self.download_stream.download(filename=directory+self.download_stream.default_filename)
@@ -84,10 +82,10 @@ class downloader:
         sys.stdout.write('downloading')
         
         out = self.streams[-1].download(filename=self.downloadfilename)
-        sys.stdout.write(out)
         self.cmd_str = ['-i',self.downloadfilename,'-map','0','-c','copy',self.downloadfilename.split('.')[0]+'.m4a']
         
-        
+    def isFail(self):
+        return self.fail  
         
     def downloadAction(self,directory,dl_format,max_best_quality,url):
         sys.stdout.write("process started")
@@ -110,7 +108,10 @@ class downloader:
                                     
             elif dl_format == "m4a":
                 if not 'list' in url:
+                    sys.stdout.write(self.url)
                     video = YouTube(self.url,on_progress_callback=self.progress_handler)
+                    print(video,type(video))
+                    sys.stdout.write(pytube.__version__)
                     self.download_audio(video,directory)
                     
                 elif 'list' in url:
@@ -140,9 +141,11 @@ class downloader:
                     sys.stdout.write(' '.join(self.cmd_str))    
             self.status = 'converting...'
             sys.stdout.write("process endeed")
-        except Exception as e:
+        except:
+            e = traceback.format_exc()
             self.fail = True
-            self.writelog(str(e),self.log_path)        
+            
+            self.writeLog(str(e),self.log_path)        
     def progress_handler(self,stream,chunck,remaining):
         size = stream.filesize
         downloaded = size-remaining
