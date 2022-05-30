@@ -4,6 +4,7 @@ You can download in mp4/m4a youtube videos/playlists. This application work for 
 ***
 ## Compatibility
 Compatible with android 8 and newer.
+[A version for linux is also available](https://github.com/acmo0/youtube-downloader-linux).
 ## Download
 [Download from our github repository.](https://github.com/acmo0/Android-Youtube-Downloader/releases/tag/v1.3)
 ## Lastest release improvements v1.3
