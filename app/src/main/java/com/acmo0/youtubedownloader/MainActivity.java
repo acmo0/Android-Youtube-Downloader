@@ -331,7 +331,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
     }
+    @Override
+    protected void onResume() {
+        Bundle extras = getIntent().getExtras();
+        String sharedUrl = "";
+        if(extras!=null) {
+            sharedUrl = extras.getString(Intent.EXTRA_TEXT);
+        }
+        editTextLink.setText(sharedUrl);
+        super.onResume();
 
+    }
     @Override
     public void onBackPressed(){
         if(this.drawerLayout.isDrawerOpen(GravityCompat.START)){
